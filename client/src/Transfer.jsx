@@ -14,25 +14,21 @@ import {toHex} from "ethereum-cryptography/utils"
   const setValue = (setter) => (evt) => setter(evt.target.value);
 
 
-
-
   function hashMessage(message){
-  const bytes = utf8ToBytes(JSON.stringify(message))
+  const bytes = utf8ToBytes(message)
   const hash = toHex(keccak256(bytes))
-  console.log(hash)
   return hash
 }
 
   async function transfer(evt) {
     evt.preventDefault();
 
-    const hashMssg = hashMessage("eee")
+    //hashing msg
+    const hashMssg = hashMessage("transaction")
+    //signing
     const [signature, recoveryBit] = await secp.sign(hashMssg, privateKey,{recovered: true}) 
     
-    console.log(signature)
-
-
-
+ 
     try {
       const {
         data: { balance },
@@ -40,7 +36,7 @@ import {toHex} from "ethereum-cryptography/utils"
         sender: address ,
         hashMssg: hashMssg,
         recoveryBit: recoveryBit,
-        signature: signature,
+        signature: toHex(signature),
         amount: parseInt(sendAmount),
         recipient,
       });
@@ -50,7 +46,7 @@ import {toHex} from "ethereum-cryptography/utils"
     }
   }
 
-  /*  const sign = secp.sign(mssg, privateKey,{recover: true}) */
+ 
   return (
     <form className="container transfer" onSubmit={transfer}>
       <h1>Send Transaction</h1>

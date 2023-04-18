@@ -1,24 +1,24 @@
 import { useState } from "react";
 import server from "./server";
-import  { keccak256 } from "ethereum-cryptography/keccak"
+import { keccak256 } from "ethereum-cryptography/keccak"
 import { utf8ToBytes } from "ethereum-cryptography/utils"
 import * as  secp from "ethereum-cryptography/secp256k1";
-import {toHex} from "ethereum-cryptography/utils"
+import { toHex } from "ethereum-cryptography/utils"
 
 
 
- function Transfer({ address, setBalance, privateKey }) {
+function Transfer({ address, setBalance, privateKey }) {
   const [sendAmount, setSendAmount] = useState("");
   const [recipient, setRecipient] = useState("");
 
   const setValue = (setter) => (evt) => setter(evt.target.value);
 
 
-  function hashMessage(message){
-  const bytes = utf8ToBytes(message)
-  const hash = toHex(keccak256(bytes))
-  return hash
-}
+  function hashMessage(message) {
+    const bytes = utf8ToBytes(message)
+    const hash = toHex(keccak256(bytes))
+    return hash
+  }
 
   async function transfer(evt) {
     evt.preventDefault();
@@ -26,14 +26,14 @@ import {toHex} from "ethereum-cryptography/utils"
     //hashing msg
     const hashMssg = hashMessage("transaction")
     //signing
-    const [signature, recoveryBit] = await secp.sign(hashMssg, privateKey,{recovered: true}) 
-    
- 
+    const [signature, recoveryBit] = await secp.sign(hashMssg, privateKey, { recovered: true })
+
+
     try {
       const {
         data: { balance },
       } = await server.post(`send`, {
-        sender: address ,
+        sender: address,
         hashMssg: hashMssg,
         recoveryBit: recoveryBit,
         signature: toHex(signature),
@@ -46,7 +46,7 @@ import {toHex} from "ethereum-cryptography/utils"
     }
   }
 
- 
+
   return (
     <form className="container transfer" onSubmit={transfer}>
       <h1>Send Transaction</h1>

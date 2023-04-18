@@ -4,12 +4,6 @@ import { toHex } from "ethereum-cryptography/utils"
 import { keccak256 } from "ethereum-cryptography/keccak"
 
 function Wallet({ address, setAddress, balance, setBalance, privateKey, setPrivateKey }) {
-
-  /*   async function onChange(evt) {
-      const address = evt.target.value;
-      setAddress(address); */
-
-
   async function handleOnchangePk(evt) {
     const privateKey = evt.target.value;
     setPrivateKey(privateKey);
@@ -38,8 +32,6 @@ function Wallet({ address, setAddress, balance, setBalance, privateKey, setPriva
   return (
     <div className="container wallet">
       <h1>Your Wallet</h1>
-
-
       <label>
         Private key
         <input placeholder="Type a private key" value={privateKey} onChange={handleOnchangePk}></input>
